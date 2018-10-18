@@ -90,21 +90,21 @@ void createFile(RainbowTable table){
 
 
 
-int main(int argc, char* argv[]){
-	clock_t begin0 = clock();
-	printf("Start Program ...\n");
-	printf("Creating table of size : %d ...\n",sizeT);
-	RainbowTable table = generateTable(8);
-	clock_t end = clock();
-	clock_t begin1 = clock();
-	double time_spent = (double)(end - begin0) / CLOCKS_PER_SEC;
-	printf("Table creation time: %d\n",time_spent);
-	printf("Creation completed ...\n");
-	printf("File creation ...\n");
-	createFile(table);
-	end = clock();
-	time_spent = (double)(end - begin1) / CLOCKS_PER_SEC;
-	printf("File creation time: %d\n",time_spent);
-	time_spent = (double)(end - begin0) / CLOCKS_PER_SEC;
-	printf("Total execution time: %d\n",time_spent);
-}
+// int main(int argc, char* argv[]){
+// 	clock_t begin0 = clock();
+// 	printf("Start Program ...\n");
+// 	printf("Creating table of size : %d ...\n",sizeT);
+// 	RainbowTable table = generateTable(8);
+// 	clock_t end = clock();
+// 	clock_t begin1 = clock();
+// 	double time_spent = (double)(end - begin0) / CLOCKS_PER_SEC;
+// 	printf("Table creation time: %d\n",time_spent);
+// 	printf("Creation completed ...\n");
+// 	printf("File creation ...\n");
+// 	createFile(table);
+// 	end = clock();
+// 	time_spent = (double)(end - begin1) / CLOCKS_PER_SEC;
+// 	printf("File creation time: %d\n",time_spent);
+// 	time_spent = (double)(end - begin0) / CLOCKS_PER_SEC;
+// 	printf("Total execution time: %d\n",time_spent);
+// }
