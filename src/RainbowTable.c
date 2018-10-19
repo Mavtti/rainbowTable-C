@@ -2,8 +2,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <math.h>
+#include "sha256.h"
 
-#define sizeT 50000
+
+#define sizeT 100
+#define nbReduction 1
+
+const char charset[] = "abcdefghijklmnopqrstuvwxyz0123456789";
 
 typedef struct RainbowRow RainbowRow;
 struct RainbowRow {
@@ -21,7 +27,9 @@ struct RainbowTable{
 
 RainbowTable generateTable(int pL);
 static char *randomHeadGenerator(char* str,size_t size);
-char* tailGenerator(char* myHead);
+char* tailGenerator(char* myHead, int passwordLength);
+char* reduction(char* hash, int index, int passwordLength);
+char* hash(char* reduction);
 
 RainbowTable generateTable(int pL){
 	RainbowTable myTable;
@@ -30,12 +38,11 @@ RainbowTable generateTable(int pL){
 	myTable.tableSize = sizeT;
 	RainbowRow* nextRow ;
 	int i = 0;
-
 	for(i=0 ; i<sizeT; i++){
 		RainbowRow* row = (RainbowRow *)malloc(sizeof(RainbowRow));
 		char* myHead = (char *)malloc(sizeof(char)*pL) ;
-		strcpy(myHead,randomHeadGenerator(myHead, pL));
-		char* myTail = tailGenerator(myHead);
+		myHead = randomHeadGenerator(myHead, pL);
+		char* myTail = tailGenerator(myHead, pL);
 		row->head =  myHead;
 		row->tail = myTail;
 		row->next = myTable.rows;
@@ -47,16 +54,22 @@ RainbowTable generateTable(int pL){
 
 /*"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/" full charset to be set*/
 
-char* tailGenerator(char* myHead){
-	return "oups";
+char* tailGenerator(char* myHead, int passwordLength){
+	char * current = malloc(sizeof(char) * strlen(myHead));
+	strcpy(current, myHead);
+	for(size_t i = 0; i <= nbReduction; i++)
+	{
+		current = reduction(hash(current), i, passwordLength);
+	}
+	
+	return current;
 }
 
 static char *randomHeadGenerator(char* str, size_t size){
-    const char charset[] = "abcdefghijklmnopqrstuvwxyz0123456789";
 	
     if (size) {	
         for (size_t n = 0; n < size; n++) {
-		int key = rand() % (int) (sizeof charset - 1);
+		int key = rand() % (int) (strlen(charset) - 1);
 		str[n] = charset[key];
         }
         str[size] = '\0';
@@ -86,6 +99,36 @@ void createFile(RainbowTable table){
 		current = current->next;
 	}
 	fclose(f);
+}
+
+char* reduction(char* hash, int index, int passwordLength) {
+	long long int entier = 1;
+	for(size_t i = 0; i < strlen(hash); i++) {
+		entier *= (int) hash[i];
+	}
+	entier = (entier + (long long int) index) % ((long long int) pow(36, 8));
+	int j = passwordLength - 1;
+	char* reduction = malloc(passwordLength * sizeof(char));
+	
+	for(int k = 0; k < passwordLength; k++) {
+		reduction[k] = 'a';
+	}
+	
+	while (entier > 0 && j >= 0) {
+		reduction[j] = charset[(int) entier % strlen(charset)];
+		entier /= strlen(charset);
+		j--;
+	}
+	return reduction;
+}
+
+char* hash(char* reduction) {
+	SHA256_CTX ctx;
+	char *hash = malloc(SHA256_BLOCK_SIZE);
+	sha256_init(&ctx);
+	sha256_update(&ctx, reduction ,strlen(reduction));
+	sha256_final(&ctx, hash);
+	return hash;
 }
 
 
