@@ -1,36 +1,6 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
-#include <math.h>
-#include "sha256.h"
+#include "RainbowTable.h"
 
-
-#define sizeT 100
-#define nbReduction 1
-
-const char charset[] = "abcdefghijklmnopqrstuvwxyz0123456789";
-
-typedef struct RainbowRow RainbowRow;
-struct RainbowRow {
-	char* head;
-	char* tail;
-	RainbowRow* next;
-};
-
-typedef struct RainbowTable RainbowTable;
-struct RainbowTable{
-	int tableSize;
-	int passwordLength;
-	RainbowRow* rows;
-};
-
-RainbowTable generateTable(int pL);
-static char *randomHeadGenerator(char* str,size_t size);
-char* tailGenerator(char* myHead, int passwordLength);
-char* reduction(char* hash, int index, int passwordLength);
-char* hash(char* reduction);
-
+// Creates a RainbowTable variable
 RainbowTable generateTable(int pL){
 	RainbowTable myTable;
 	myTable.rows = NULL;
@@ -48,38 +18,34 @@ RainbowTable generateTable(int pL){
 		row->next = myTable.rows;
 		myTable.rows = row;
 	}
-
 	return myTable;
 }
 
-/*"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/" full charset to be set*/
-
+// Generates a Tail based on the head with nbReduction hash/reduction iterations
 char* tailGenerator(char* myHead, int passwordLength){
 	char * current = malloc(sizeof(char) * strlen(myHead));
 	strcpy(current, myHead);
-	for(size_t i = 0; i <= nbReduction; i++)
-	{
+	for(size_t i = 0; i <= nbReduction; i++){
 		current = reduction(hash(current), i, passwordLength);
 	}
-	
 	return current;
 }
 
+// Generates a head based on the charset defined in .h file of length "size"
 static char *randomHeadGenerator(char* str, size_t size){
-	
-    if (size) {	
+    if (size) {
         for (size_t n = 0; n < size; n++) {
-		int key = rand() % (int) (strlen(charset) - 1);
-		str[n] = charset[key];
-        }
-        str[size] = '\0';
-    }
-    
+					int key = rand() % (int) (strlen(charset) - 1);
+					str[n] = charset[key];
+			  }
+			  str[size] = '\0';
+		}
     return str;
 }
 
+// Generates a Rainbow.txt file in which the RainbowTable will be stored
 void createFile(RainbowTable table){
-	FILE *f = fopen("Rainbow1.txt", "w");
+	FILE *f = fopen("Rainbow.txt", "w");
 	if (f == NULL)
 	{
 	    printf("Error opening file!\n");
@@ -101,6 +67,7 @@ void createFile(RainbowTable table){
 	fclose(f);
 }
 
+// It Reduces a hash
 char* reduction(char* hash, int index, int passwordLength) {
 	long long int entier = 1;
 	for(size_t i = 0; i < strlen(hash); i++) {
@@ -109,11 +76,11 @@ char* reduction(char* hash, int index, int passwordLength) {
 	entier = (entier + (long long int) index) % ((long long int) pow(36, 8));
 	int j = passwordLength - 1;
 	char* reduction = malloc(passwordLength * sizeof(char));
-	
+
 	for(int k = 0; k < passwordLength; k++) {
 		reduction[k] = 'a';
 	}
-	
+
 	while (entier > 0 && j >= 0) {
 		reduction[j] = charset[(int) entier % strlen(charset)];
 		entier /= strlen(charset);
@@ -122,6 +89,7 @@ char* reduction(char* hash, int index, int passwordLength) {
 	return reduction;
 }
 
+// Generates a SHA-256 hash of a char* reduction
 char* hash(char* reduction) {
 	SHA256_CTX ctx;
 	char *hash = malloc(SHA256_BLOCK_SIZE);
