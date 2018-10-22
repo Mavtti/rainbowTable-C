@@ -28,7 +28,7 @@ struct RainbowTable{
 
 RainbowTable generateTable(int pL);
 static char *randomHeadGenerator(char* str,size_t size);
-char* tailGenerator(char* myHead);
+char* tailGenerator(char* myHead, int passwordLength);
 char* reduction(char* hash, int index, int passwordLength);
 char* hash(char* reduction);
 void createFile(RainbowTable table);
