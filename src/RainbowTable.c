@@ -127,8 +127,8 @@ RainbowTable* findTable(char* fichier){
 	while(fgets(line,79,f) != NULL){
 
 		RainbowRow* row = (RainbowRow *)malloc(sizeof(RainbowRow));
-		char* myHead = (unsigned char *)malloc(sizeof(unsigned char)*table.passwordLength) ;
-		char* myTail = (unsigned char *)malloc(sizeof(unsigned char)*table.passwordLength) ;
+		unsigned char* myHead = (unsigned char *)malloc(sizeof(unsigned char)*table.passwordLength) ;
+		unsigned char* myTail = (unsigned char *)malloc(sizeof(unsigned char)*table.passwordLength) ;
 		fscanf(f,"%s %s",myHead, myTail);
 		row->head =  myHead;
 		row->tail = myTail;
