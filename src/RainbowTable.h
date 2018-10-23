@@ -2,12 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define sizeT 5
+#define sizeT 100
 
 typedef struct RainbowRow RainbowRow;
 struct RainbowRow {
-	char* head;
-	char* tail;
+	unsigned char* head;
+	unsigned char* tail;
 	RainbowRow* next;
 };
 
@@ -19,7 +19,7 @@ struct RainbowTable{
 };
 
 RainbowTable generateTable(int pL);
-static char *randomHeadGenerator(char* str,size_t size);
-char* tailGenerator(char* myHead);
-char* reduction(char* hash, int index, int passwordLength);
-char* hash(char* reduction);
+static unsigned char *randomHeadGenerator(unsigned char* str,size_t size);
+unsigned char* tailGenerator(unsigned char* myHead);
+unsigned char* reduction(unsigned char* hash, int index, int passwordLength);
+unsigned char* hash(unsigned char* reduction);
