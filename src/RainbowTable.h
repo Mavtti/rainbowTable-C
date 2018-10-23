@@ -32,3 +32,5 @@ char* tailGenerator(char* myHead, int passwordLength);
 char* reduction(char* hash, int index, int passwordLength);
 char* hash(char* reduction);
 void createFile(RainbowTable table);
+void printRain(RainbowTable* table);
+RainbowTable* findTable(char* fichier);

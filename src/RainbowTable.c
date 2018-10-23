@@ -99,7 +99,57 @@ char* hash(char* reduction) {
 	return hash;
 }
 
+RainbowTable* findTable(char* fichier){
+	RainbowTable table;
+	RainbowTable* pTable = &table;
+	int info;
+	char line [80];
 
+	table.rows = NULL;
+	FILE *f = fopen("Rainbow.txt", "r");
+	if (f == NULL)
+	{
+	    printf("Error opening file!\n");
+	    exit(1);
+	}
+
+	/* Read table information */
+	fscanf(f,"%d",&info);
+	table.tableSize =  info;
+	fgets(line,79,f);
+	fscanf(f,"%d",&info);
+	table.passwordLength =  info;
+	fgets(line,79,f);
+	fscanf(f,"%d",&info);
+	table.redCount =  info;
+
+	/* Read table datas */
+	while(fgets(line,79,f) != NULL){
+
+		RainbowRow* row = (RainbowRow *)malloc(sizeof(RainbowRow));
+		char* myHead = (unsigned char *)malloc(sizeof(unsigned char)*table.passwordLength) ;
+		char* myTail = (unsigned char *)malloc(sizeof(unsigned char)*table.passwordLength) ;
+		fscanf(f,"%s %s",myHead, myTail);
+		row->head =  myHead;
+		row->tail = myTail;
+		row->next = table.rows;
+		table.rows = row;
+	}
+
+	fclose(f);
+	return pTable;
+}
+
+void printRain(RainbowTable* table){
+	printf( "%d <- Table size\n", table->tableSize);
+	printf( "%d <- Password length\n", table->passwordLength);
+	printf( "%d <- Reduction count\n\n", table->redCount);
+	RainbowRow* current = table->rows;
+	while( current != NULL){
+		printf("%s %s\n",current->head,current->tail);
+		current = current->next;
+	}
+}
 
 // int main(int argc, char* argv[]){
 // 	clock_t begin0 = clock();
