@@ -6,8 +6,8 @@
 #include "sha256.h"
 
 
-#define sizeT 100
-#define nbReduction 50000
+#define sizeT 1
+#define nbReduction 1
 
 const char charset[] = "abcdefghijklmnopqrstuvwxyz0123456789";
 

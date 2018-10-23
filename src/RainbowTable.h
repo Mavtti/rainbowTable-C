@@ -19,6 +19,7 @@ struct RainbowTable{
 };
 
 RainbowTable generateTable(int pL);
+RainbowTable* findTable(char* fichier);
 static unsigned char *randomHeadGenerator(unsigned char* str,size_t size);
 unsigned char* tailGenerator(unsigned char* myHead);
 unsigned char* reduction(unsigned char* hash, int index, int passwordLength);
