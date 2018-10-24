@@ -37,7 +37,7 @@ int main() {
     double time_spent = (double)(end - begin0) / CLOCKS_PER_SEC;
 	printf("Execution time: %f\n\n",time_spent);
 	RainbowTable* table = findTable("Rainbow.txt");
-	unsigned char* hash = hasher("testtest");
+	unsigned char* hash = hasher("testrert");
 	startCrack(table, hash);
     double time_spent1 = (double)(end - begin0) / CLOCKS_PER_SEC;
     printf("Total execution time: %f\n\n",time_spent1);

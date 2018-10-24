@@ -36,7 +36,7 @@ RainbowRow* search(RainbowTable* table, unsigned char* tail) {
 RainbowRow* testStep(RainbowTable* table, unsigned char* hash, int step) { 
     unsigned char* current = malloc(32 * sizeof(unsigned char));
     unsigned char* tobeFreed = malloc(32 * sizeof(unsigned char));
-    printf("Step %i ", step);
+    if (step % 1000 == 0) printf("Step %i \n", step);
     memcpy(current, hash, 32);
 
     for(int i = step; i < nbReduction; i++)
@@ -48,10 +48,12 @@ RainbowRow* testStep(RainbowTable* table, unsigned char* hash, int step) {
 		current = hasher(current);
 		free(tobeFreed);
     }
-    printf("\n");
-    current = reduction(hash, nbReduction, table -> passwordLength);
-
-    return search(table, current);
+    tobeFreed = current;
+    current = reduction(current, nbReduction, table -> passwordLength);
+    free(tobeFreed);
+    RainbowRow* row = search(table, current);
+    free(current);
+    return row;
 }
 
 unsigned char* buildPwd(RainbowRow* row, unsigned char* hash, int passwordLength) {
@@ -70,5 +72,11 @@ unsigned char* buildPwd(RainbowRow* row, unsigned char* hash, int passwordLength
         currentHash = hasher(currentPwd);
     }
 
+    
+    for(int i = 0; i < 32; i++)
+    {
+        printf("%u, ", currentHash[i]);
+    }
+    
     return currentPwd;
 }
