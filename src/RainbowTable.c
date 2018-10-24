@@ -6,8 +6,8 @@
 #include "sha256.h"
 
 
-#define sizeT 1
-#define nbReduction 1
+#define sizeT 500
+#define nbReduction 50000
 
 const char charset[] = "abcdefghijklmnopqrstuvwxyz0123456789";
 
@@ -29,7 +29,7 @@ RainbowTable generateTable(int pL);
 static unsigned char *randomHeadGenerator(unsigned char* str,size_t size);
 unsigned char* tailGenerator(unsigned char* myHead, int passwordLength);
 unsigned char* reduction(unsigned char* hash, int index, int passwordLength);
-unsigned char* hash(unsigned char* reduction);
+unsigned char* hasher(unsigned char* reduction);
 
 RainbowTable generateTable(int pL){
 	RainbowTable myTable;
@@ -42,9 +42,8 @@ RainbowTable generateTable(int pL){
 		RainbowRow* row = (RainbowRow *)malloc(sizeof(RainbowRow));
 		char* myHead = (char *)malloc(sizeof(char)*pL) ;
 		myHead = randomHeadGenerator(myHead, pL);
-		char* myTail = tailGenerator(myHead, pL);
 		row->head =  myHead;
-		row->tail = myTail;
+		row->tail = tailGenerator(myHead, pL);
 		row->next = myTable.rows;
 		myTable.rows = row;
 	}
@@ -56,10 +55,16 @@ RainbowTable generateTable(int pL){
 
 unsigned char* tailGenerator(unsigned char* myHead, int passwordLength){
 	unsigned char * current = malloc(sizeof(unsigned char) * strlen(myHead));
+	unsigned char * tobeFreed = malloc(sizeof(unsigned char) * strlen(myHead));
 	strcpy(current, myHead);
 	for(size_t i = 0; i <= nbReduction; i++)
 	{
-		current = reduction(hash(current), i, passwordLength);
+		tobeFreed = current;
+		current = hasher(current);
+		free(tobeFreed);
+		tobeFreed = current;
+		current = reduction(current, i, passwordLength);
+		free(tobeFreed);
 	}
 	
 	return current;
@@ -123,7 +128,7 @@ unsigned char* reduction(unsigned char* hash, int index, int passwordLength) {
 	return reduction;
 }
 
-unsigned char* hash(unsigned char* reduction) {
+unsigned char* hasher(unsigned char* reduction) {
 	SHA256_CTX ctx;
 	unsigned char *hash = malloc(SHA256_BLOCK_SIZE);
 	sha256_init(&ctx);

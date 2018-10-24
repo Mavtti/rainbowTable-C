@@ -7,8 +7,8 @@ int main(int argc, char* argv[]){
     clock_t end = clock();
 	double time_spent = (double)(end - begin0) / CLOCKS_PER_SEC;
 	unsigned char mot_de_passe = "test123r";
-	RainbowTable* table = findTable("Rainbow1.txt");
-	startCrack(table, hash(mot_de_passe));
+	// RainbowTable table = generateTable(8);
+	// startCrack(&table, hasher(mot_de_passe));
 	printf("Total execution time: %f\n",time_spent);
 	return EXIT_SUCCESS;
 }
