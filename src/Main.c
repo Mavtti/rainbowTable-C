@@ -1,11 +1,10 @@
-
 #include <time.h>
 #include "RainbowCracker.h"
 
-int startCrack(RainbowTable* table, char* hash) {
+int startCrack(RainbowTable* table, unsigned char* hash) {
     clock_t begin = clock();
 	printf("Starting to crack hash\n");
-    char* password = crackHash(table, hash);
+    unsigned char* password = crackHash(table, hash);
     printf("The password found is : %s\n", password);
     double end = clock();
 	double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;

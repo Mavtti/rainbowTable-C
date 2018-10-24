@@ -1,4 +1,35 @@
-#include "RainbowTable.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include <math.h>
+#include "sha256.h"
+
+
+#define sizeT 500
+#define nbReduction 50000
+
+const char charset[] = "abcdefghijklmnopqrstuvwxyz0123456789";
+
+typedef struct RainbowRow RainbowRow;
+struct RainbowRow {
+	unsigned char* head;
+	unsigned char* tail;
+	RainbowRow* next;
+};
+
+typedef struct RainbowTable RainbowTable;
+struct RainbowTable{
+	int tableSize;
+	int passwordLength;
+	RainbowRow* rows;
+};
+
+RainbowTable generateTable(int pL);
+static unsigned char *randomHeadGenerator(unsigned char* str,size_t size);
+unsigned char* tailGenerator(unsigned char* myHead, int passwordLength);
+unsigned char* reduction(unsigned char* hash, int index, int passwordLength);
+unsigned char* hasher(unsigned char* reduction);
 
 // Creates a RainbowTable variable
 RainbowTable generateTable(int pL){
@@ -20,19 +51,27 @@ RainbowTable generateTable(int pL){
 	return myTable;
 }
 
-// Generates a Tail based on the head with nbReduction hash/reduction iterations
-char* tailGenerator(char* myHead, int passwordLength){
-	char * current = malloc(sizeof(char) * strlen(myHead));
+/*"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/" full charset to be set*/
+
+unsigned char* tailGenerator(unsigned char* myHead, int passwordLength){
+	unsigned char * current = malloc(sizeof(unsigned char) * strlen(myHead));
+	unsigned char * tobeFreed = malloc(sizeof(unsigned char) * strlen(myHead));
 	strcpy(current, myHead);
-	for(size_t i = 0; i <= nbReduction; i++){
-		current = reduction(hash(current), i, passwordLength);
+	for(size_t i = 0; i <= nbReduction; i++)
+	{
+		tobeFreed = current;
+		current = hasher(current);
+		free(tobeFreed);
+		tobeFreed = current;
+		current = reduction(current, i, passwordLength);
+		free(tobeFreed);
 	}
 	return current;
 }
 
-// Generates a head based on the charset defined in .h file of length "size"
-static char *randomHeadGenerator(char* str, size_t size){
-    if (size) {
+static unsigned char *randomHeadGenerator(unsigned char* str, size_t size){
+	
+    if (size) {	
         for (size_t n = 0; n < size; n++) {
 					int key = rand() % (int) (strlen(charset) - 1);
 					str[n] = charset[key];
@@ -67,16 +106,15 @@ void createFile(RainbowTable table){
 	fclose(f);
 }
 
-// It Reduces a hash
-char* reduction(char* hash, int index, int passwordLength) {
-	long long int entier = 1;
-	for(size_t i = 0; i < strlen(hash); i++) {
-		entier *= (int) hash[i];
+unsigned char* reduction(unsigned char* hash, int index, int passwordLength) {
+	long long int entier = 0;
+	
+	for(size_t i = 0; i < 30; i++) {
+		entier += (long long int) hash[i] * pow(2, i);
 	}
 	entier = (entier + (long long int) index) % ((long long int) pow(36, 8));
 	int j = passwordLength - 1;
-	char* reduction = malloc(passwordLength * sizeof(char));
-
+	unsigned char* reduction = malloc(passwordLength * sizeof(unsigned char));
 	for(int k = 0; k < passwordLength; k++) {
 		reduction[k] = 'a';
 	}
@@ -89,15 +127,15 @@ char* reduction(char* hash, int index, int passwordLength) {
 	return reduction;
 }
 
-// Generates a SHA-256 hash of a char* reduction
-char* hash(char* reduction) {
+unsigned char* hasher(unsigned char* reduction) {
 	SHA256_CTX ctx;
-	char *hash = malloc(SHA256_BLOCK_SIZE);
+	unsigned char *hash = malloc(SHA256_BLOCK_SIZE);
 	sha256_init(&ctx);
 	sha256_update(&ctx, reduction ,strlen(reduction));
 	sha256_final(&ctx, hash);
 	return hash;
 }
+
 
 RainbowTable* findTable(char* fichier){
 	RainbowTable table;
@@ -160,22 +198,3 @@ void freeList(struct RainbowRow* head){
 			 tmp = NULL;
   }
 }
-
-// int main(int argc, char* argv[]){
-// 	clock_t begin0 = clock();
-// 	printf("Start Program ...\n");
-// 	printf("Creating table of size : %d ...\n",sizeT);
-// 	RainbowTable table = generateTable(8);
-// 	clock_t end = clock();
-// 	clock_t begin1 = clock();
-// 	double time_spent = (double)(end - begin0) / CLOCKS_PER_SEC;
-// 	printf("Table creation time: %d\n",time_spent);
-// 	printf("Creation completed ...\n");
-// 	printf("File creation ...\n");
-// 	createFile(table);
-// 	end = clock();
-// 	time_spent = (double)(end - begin1) / CLOCKS_PER_SEC;
-// 	printf("File creation time: %d\n",time_spent);
-// 	time_spent = (double)(end - begin0) / CLOCKS_PER_SEC;
-// 	printf("Total execution time: %d\n",time_spent);
-// }
