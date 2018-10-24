@@ -30,16 +30,20 @@ int createTable() {
 	return EXIT_SUCCESS;
 }
 
-int main() {
-    clock_t begin0 = clock();
-    // createTable();
-    clock_t end = clock();
-    double time_spent = (double)(end - begin0) / CLOCKS_PER_SEC;
-	printf("Execution time: %f\n\n",time_spent);
-	RainbowTable* table = findTable("Rainbow.txt");
-	unsigned char* hash = hasher("testrert");
-	startCrack(table, hash);
-    double time_spent1 = (double)(end - begin0) / CLOCKS_PER_SEC;
-    printf("Total execution time: %f\n\n",time_spent1);
+int main(int argc, char* argv[]){
+    
+    if(argv[1] == "1"){
+    	createTable();
+    }
+    if(argv[1] == "2"){
+	if(strlen(argv[2]) != 8){
+		printf("Need password of length 8.\n");
+		return EXIT_SUCCESS;
+	}
+	else{ 
+		printf("Password to crack: %s .\n", argv[2]);
+		RainbowTable* table = findTable("Rainbow.txt");
+		printf("Table found.\n");
+		printf("--> %s\n",crackHash(table, argv[2]));
+	}
     return EXIT_SUCCESS;
-}
