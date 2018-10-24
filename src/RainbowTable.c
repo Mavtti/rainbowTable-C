@@ -22,6 +22,7 @@ typedef struct RainbowTable RainbowTable;
 struct RainbowTable{
 	int tableSize;
 	int passwordLength;
+	int redCount;
 	RainbowRow* rows;
 };
 
@@ -38,7 +39,6 @@ RainbowTable generateTable(int pL){
 	myTable.passwordLength = pL;
 	myTable.tableSize = sizeT;
 	myTable.redCount = nbReduction;
-	RainbowRow* nextRow ;
 	int i = 0;
 	for(i=0 ; i<sizeT; i++){
 		RainbowRow* row = (RainbowRow *)malloc(sizeof(RainbowRow));
@@ -54,8 +54,8 @@ RainbowTable generateTable(int pL){
 /*"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/" full charset to be set*/
 
 unsigned char* tailGenerator(unsigned char* myHead, int passwordLength){
-	unsigned char * current = malloc(sizeof(unsigned char) * strlen(myHead));
-	unsigned char * tobeFreed = malloc(sizeof(unsigned char) * strlen(myHead));
+	unsigned char * current = malloc(sizeof(unsigned char) * passwordLength);
+	unsigned char * tobeFreed = malloc(sizeof(unsigned char) * passwordLength);
 	strcpy(current, myHead);
 	for(size_t i = 0; i <= nbReduction; i++)
 	{

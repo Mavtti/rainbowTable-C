@@ -13,8 +13,8 @@ int startCrack(RainbowTable* table, unsigned char* hash) {
 }
 
 int createTable() {
-  clock_t begin0 = clock();
-  printf("Start Program ...\n");
+  	clock_t begin0 = clock();
+  	printf("Start Program ...\n");
 	printf("Creating table of size : %d ...\n",sizeT);
 	RainbowTable table = generateTable(8);
 	clock_t end = clock();
@@ -30,15 +30,16 @@ int createTable() {
 	return EXIT_SUCCESS;
 }
 
-int main(){
+int main() {
     clock_t begin0 = clock();
     createTable();
     clock_t end = clock();
     double time_spent = (double)(end - begin0) / CLOCKS_PER_SEC;
-	  printf(" execution time: %f\n\n",time_spent);
-	  printRain(findTable("Rainbow.txt"));
+	printf("Execution time: %f\n\n",time_spent);
+	RainbowTable* table = findTable("Rainbow.txt");
+	unsigned char* hash = hasher("testtest");
+	startCrack(table, hash);
     double time_spent1 = (double)(end - begin0) / CLOCKS_PER_SEC;
     printf("Total execution time: %f\n\n",time_spent1);
-
     return EXIT_SUCCESS;
 }

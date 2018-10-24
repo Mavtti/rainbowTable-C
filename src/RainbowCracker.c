@@ -35,15 +35,21 @@ RainbowRow* search(RainbowTable* table, unsigned char* tail) {
 
 RainbowRow* testStep(RainbowTable* table, unsigned char* hash, int step) { 
     unsigned char* current = malloc(strlen(hash) * sizeof(unsigned char));
+    unsigned char* tobeFreed = malloc(strlen(hash) * sizeof(unsigned char));
+
     strcpy(current, hash);
 
     for(int i = step; i < nbReduction; i++)
     {
-        current = hasher(reduction(current, i, table -> passwordLength));
+		tobeFreed = current;
+		current = hasher(current);
+		free(tobeFreed);
+		tobeFreed = current;
+		current = reduction(current, i, table -> passwordLength);
+		free(tobeFreed);
     }
     
     current = reduction(hash, nbReduction, table -> passwordLength);
-
 
     return search(table, current);
 }
@@ -60,8 +66,6 @@ unsigned char* buildPwd(RainbowRow* row, unsigned char* hash, int passwordLength
         if (strcmp(currentHash, hash) == 0) {
             break;
         }
-        // set currentpwd to the reduction of currentHash
-        // set currenthash to the hash of current pwd
         currentPwd = reduction(currentHash, i, passwordLength);
         currentHash = hasher(currentPwd);
     }

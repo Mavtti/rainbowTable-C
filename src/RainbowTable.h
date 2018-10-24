@@ -5,7 +5,7 @@
 #include <math.h>
 #include "sha256.h"
 
-#define sizeT 100
+#define sizeT 500
 
 typedef struct RainbowRow RainbowRow;
 struct RainbowRow {
