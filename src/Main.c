@@ -46,4 +46,5 @@ int main(int argc, char* argv[]){
 		printf("Table found.\n");
 		printf("--> %s\n",crackHash(table, argv[2]));
 	}
+	}
     return EXIT_SUCCESS;
