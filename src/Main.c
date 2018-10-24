@@ -31,20 +31,20 @@ int createTable() {
 }
 
 int main(int argc, char* argv[]){
-    
-    if(argv[1] == "1"){
+    printf("%s %s\n",argv[1],argv[2]);
+    if(strcmp(argv[1],"1") == 0){
     	createTable();
     }
-    if(argv[1] == "2"){
+    if(strcmp(argv[1], "2") == 0){
 	if(strlen(argv[2]) != 8){
 		printf("Need password of length 8.\n");
 		return EXIT_SUCCESS;
 	}
 	else{ 
-		printf("Password to crack: %s .\n", argv[2]);
 		RainbowTable* table = findTable("Rainbow.txt");
 		printf("Table found.\n");
-		printf("--> %s\n",crackHash(table, argv[2]));
+		printf("--> %s\n",crackHash(table, "testrert"));
 	}
-	}
+    }
     return EXIT_SUCCESS;
+}
