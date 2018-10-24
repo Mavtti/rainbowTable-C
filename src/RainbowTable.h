@@ -23,6 +23,7 @@ typedef struct RainbowTable RainbowTable;
 struct RainbowTable{
 	int tableSize;
 	int passwordLength;
+	int redCount;
 	RainbowRow* rows;
 };
 
@@ -32,5 +33,6 @@ char* tailGenerator(char* myHead, int passwordLength);
 char* reduction(char* hash, int index, int passwordLength);
 char* hash(char* reduction);
 void createFile(RainbowTable table);
-void printRain(RainbowTable* table);
+void printRainbow(RainbowTable* table);
 RainbowTable* findTable(char* fichier);
+void freeList(struct RainbowRow* head);

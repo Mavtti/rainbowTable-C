@@ -6,15 +6,14 @@ RainbowTable generateTable(int pL){
 	myTable.rows = NULL;
 	myTable.passwordLength = pL;
 	myTable.tableSize = sizeT;
+	myTable.redCount = nbReduction;
 	RainbowRow* nextRow ;
 	int i = 0;
 	for(i=0 ; i<sizeT; i++){
 		RainbowRow* row = (RainbowRow *)malloc(sizeof(RainbowRow));
-		char* myHead = (char *)malloc(sizeof(char)*pL) ;
-		myHead = randomHeadGenerator(myHead, pL);
-		char* myTail = tailGenerator(myHead, pL);
-		row->head =  myHead;
-		row->tail = myTail;
+		row->head = (unsigned char*)malloc(pL * sizeof(unsigned char));
+		row->head = randomHeadGenerator(row->head, pL);
+		row->tail = tailGenerator(row->head, pL);
 		row->next = myTable.rows;
 		myTable.rows = row;
 	}
@@ -46,6 +45,7 @@ static char *randomHeadGenerator(char* str, size_t size){
 // Generates a Rainbow.txt file in which the RainbowTable will be stored
 void createFile(RainbowTable table){
 	FILE *f = fopen("Rainbow.txt", "w");
+	RainbowRow* current;
 	if (f == NULL)
 	{
 	    printf("Error opening file!\n");
@@ -53,13 +53,13 @@ void createFile(RainbowTable table){
 	}
 
 	/* print table info */
-	fprintf(f, "### Rainbow table information ###\n");
-	fprintf(f, "Table size: %d\n", table.tableSize);
-	fprintf(f, "Password length: %d\n\n", table.passwordLength);
-	fprintf(f, "### Rainbow table datas ###\n");
+	/*fprintf(f, "### Rainbow table information ###\n");*/
+	fprintf(f, "%d <- Table size\n", table.tableSize);
+	fprintf(f, "%d <- Password length\n", table.passwordLength);
+	fprintf(f, "%d <- Reduction count\n\n", table.redCount);
 
 	/* print table data */
-	RainbowRow* current = table.rows;
+	current = table.rows;
 	while(current != NULL){
 		fprintf(f,"%s %s\n",current->head,current->tail);
 		current = current->next;
@@ -140,7 +140,7 @@ RainbowTable* findTable(char* fichier){
 	return pTable;
 }
 
-void printRain(RainbowTable* table){
+void printRainbow(RainbowTable* table){
 	printf( "%d <- Table size\n", table->tableSize);
 	printf( "%d <- Password length\n", table->passwordLength);
 	printf( "%d <- Reduction count\n\n", table->redCount);
@@ -149,6 +149,16 @@ void printRain(RainbowTable* table){
 		printf("%s %s\n",current->head,current->tail);
 		current = current->next;
 	}
+}
+
+void freeList(struct RainbowRow* head){
+   struct RainbowRow* tmp;
+   while (head != NULL){
+       tmp = head;
+       head = head->next;
+       free(tmp);
+			 tmp = NULL;
+  }
 }
 
 // int main(int argc, char* argv[]){
