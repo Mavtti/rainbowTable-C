@@ -1,18 +1,6 @@
 #include <time.h>
 #include "RainbowCracker.h"
 
-int main(int argc, char* argv[]){
-	clock_t begin0 = clock();
-	createTable();
-    clock_t end = clock();
-	double time_spent = (double)(end - begin0) / CLOCKS_PER_SEC;
-	unsigned char mot_de_passe = "test123r";
-	// RainbowTable table = generateTable(8);
-	// startCrack(&table, hasher(mot_de_passe));
-	printf("Total execution time: %f\n",time_spent);
-	return EXIT_SUCCESS;
-}
-
 int startCrack(RainbowTable* table, unsigned char* hash) {
     clock_t begin = clock();
 	printf("Starting to crack hash\n");
@@ -25,8 +13,8 @@ int startCrack(RainbowTable* table, unsigned char* hash) {
 }
 
 int createTable() {
-    clock_t begin0 = clock();
-    printf("Start Program ...\n");
+  clock_t begin0 = clock();
+  printf("Start Program ...\n");
 	printf("Creating table of size : %d ...\n",sizeT);
 	RainbowTable table = generateTable(8);
 	clock_t end = clock();
@@ -40,4 +28,17 @@ int createTable() {
 	time_spent = (double)(end - begin1) / CLOCKS_PER_SEC;
 	printf("File creation time: %f\n",time_spent);
 	return EXIT_SUCCESS;
+}
+
+int main(){
+    clock_t begin0 = clock();
+    createTable();
+    clock_t end = clock();
+    double time_spent = (double)(end - begin0) / CLOCKS_PER_SEC;
+	  printf(" execution time: %f\n\n",time_spent);
+	  printRain(findTable("Rainbow.txt"));
+    double time_spent1 = (double)(end - begin0) / CLOCKS_PER_SEC;
+    printf("Total execution time: %f\n\n",time_spent1);
+
+    return EXIT_SUCCESS;
 }

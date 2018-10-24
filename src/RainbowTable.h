@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
+#include <math.h>
+#include "sha256.h"
 
 #define sizeT 100
 
@@ -15,6 +18,7 @@ typedef struct RainbowTable RainbowTable;
 struct RainbowTable{
 	int tableSize;
 	int passwordLength;
+	int redCount;
 	RainbowRow* rows;
 };
 
@@ -24,3 +28,7 @@ static unsigned char *randomHeadGenerator(unsigned char* str,size_t size);
 unsigned char* tailGenerator(unsigned char* myHead);
 unsigned char* reduction(unsigned char* hash, int index, int passwordLength);
 unsigned char* hasher(unsigned char* reduction);
+
+void createFile(RainbowTable table);
+void printRainbow(RainbowTable* table);
+void freeList(struct RainbowRow* head);

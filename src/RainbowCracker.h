@@ -1,4 +1,4 @@
-
+#include <stdbool.h>
 #include "RainbowTable.h"
 
 #define nbReduction 50000

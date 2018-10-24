@@ -1,0 +1,23 @@
+CC = gcc
+CFLAGS = WAll -O
+LDFLAGS =
+EXEC = RainbowTable
+SRC = $(wildcard *.c)
+OBJ = $(SRC:.c=.o)
+
+
+all: $(EXEC)
+
+RainbowTable: $(OBJ)
+  $(CC) -o $@ $^ $(LDFLAGS)
+
+%.o: %.c
+  $(CC) -o $@ -c $< $(CFLAGS)
+
+main.o: main.c RainbowTable.h RainbowCracker.h
+  
+clean:
+  rm -f *.o core
+
+mrproper: clean
+  rm -f $(EXEC)

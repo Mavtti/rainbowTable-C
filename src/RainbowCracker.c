@@ -1,8 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
-#include <stdbool.h>
 #include "RainbowTable.h"
 
 #define nbReduction 50000
@@ -12,20 +7,16 @@ RainbowRow* search(RainbowTable* table, unsigned char* tail);
 unsigned char* buildPwd(RainbowRow* row, unsigned char* hash, int passwordLength);
 
 unsigned char* crackHash(RainbowTable* table, unsigned char* hash) {
-
     RainbowRow* hashRow = NULL;
-    for(int i = nbReduction; i >= 0; i--)
-    {
+    for(int i = nbReduction; i >= 0; i--){
         hashRow = testStep(table, hash, i);
         if (hashRow != NULL) {
             break;
         }
     }
-
     if (hashRow != NULL) {
         return buildPwd(hashRow, hash, table -> passwordLength);
     }
-
     return NULL;
 }
 
@@ -53,6 +44,7 @@ RainbowRow* testStep(RainbowTable* table, unsigned char* hash, int step) {
     
     current = reduction(hash, nbReduction, table -> passwordLength);
 
+
     return search(table, current);
 }
 
@@ -73,6 +65,6 @@ unsigned char* buildPwd(RainbowRow* row, unsigned char* hash, int passwordLength
         currentPwd = reduction(currentHash, i, passwordLength);
         currentHash = hasher(currentPwd);
     }
-    
+
     return currentPwd;
 }
