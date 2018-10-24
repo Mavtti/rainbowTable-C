@@ -136,13 +136,12 @@ unsigned char* hasher(unsigned char* reduction) {
 	return hash;
 }
 
-
 RainbowTable* findTable(char* fichier){
 	RainbowTable table;
 	RainbowTable* pTable = &table;
 	int info;
 	char line [80];
-
+	
 	table.rows = NULL;
 	FILE *f = fopen("Rainbow.txt", "r");
 	if (f == NULL)
@@ -160,10 +159,10 @@ RainbowTable* findTable(char* fichier){
 	fgets(line,79,f);
 	fscanf(f,"%d",&info);
 	table.redCount =  info;
-
+	
 	/* Read table datas */
 	while(fgets(line,79,f) != NULL){
-
+		
 		RainbowRow* row = (RainbowRow *)malloc(sizeof(RainbowRow));
 		unsigned char* myHead = (unsigned char *)malloc(sizeof(unsigned char)*table.passwordLength) ;
 		unsigned char* myTail = (unsigned char *)malloc(sizeof(unsigned char)*table.passwordLength) ;
@@ -173,7 +172,7 @@ RainbowTable* findTable(char* fichier){
 		row->next = table.rows;
 		table.rows = row;
 	}
-
+	
 	fclose(f);
 	return pTable;
 }
