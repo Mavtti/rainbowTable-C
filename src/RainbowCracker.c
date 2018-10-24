@@ -1,10 +1,27 @@
 #include "RainbowTable.h"
+#include <stdbool.h>
 
 #define nbReduction 50000
 
 RainbowRow* testStep(RainbowTable* table, unsigned char* hash, int step);
 RainbowRow* search(RainbowTable* table, unsigned char* tail);
 unsigned char* buildPwd(RainbowRow* row, unsigned char* hash, int passwordLength);
+
+bool compareHash(unsigned char* hash1, unsigned char* hash2, int taille) {
+    for(int i = 0; i < taille; i++)
+    {
+        if (hash1[i] != hash2[i]) {
+            return false;
+        }
+    }
+    
+    for(int i = 0; i < taille; i++)
+    {
+        printf("comparison %u, %u\n", hash1[i], hash2[i]);
+    }
+    
+    return true;
+}
 
 unsigned char* crackHash(RainbowTable* table, unsigned char* hash) {
     RainbowRow* hashRow = NULL;
@@ -25,7 +42,7 @@ unsigned char* crackHash(RainbowTable* table, unsigned char* hash) {
 RainbowRow* search(RainbowTable* table, unsigned char* tail) {
     RainbowRow* current = table -> rows;
     while (current -> next != NULL) {
-        if (strcmp(current -> tail, tail) == 0) {
+        if (compareHash(current -> tail, tail, 8)) {
             return current;
         }
         current = current -> next;
@@ -65,7 +82,7 @@ unsigned char* buildPwd(RainbowRow* row, unsigned char* hash, int passwordLength
 
     for(size_t i = 0; i < nbReduction; i++)
     {
-        if (strcmp(currentHash, hash) == 0) {
+        if (compareHash(currentHash, hash, 32)) {
             break;
         }
         currentPwd = reduction(currentHash, i, passwordLength);
@@ -80,3 +97,4 @@ unsigned char* buildPwd(RainbowRow* row, unsigned char* hash, int passwordLength
     
     return currentPwd;
 }
+
