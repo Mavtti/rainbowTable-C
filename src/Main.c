@@ -32,7 +32,7 @@ int createTable() {
 
 int main() {
     clock_t begin0 = clock();
-    createTable();
+    // createTable();
     clock_t end = clock();
     double time_spent = (double)(end - begin0) / CLOCKS_PER_SEC;
 	printf("Execution time: %f\n\n",time_spent);

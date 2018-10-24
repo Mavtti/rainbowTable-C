@@ -137,12 +137,11 @@ unsigned char* hasher(unsigned char* reduction) {
 }
 
 RainbowTable* findTable(char* fichier){
-	RainbowTable table;
-	RainbowTable* pTable = &table;
+	RainbowTable* pTable = malloc(sizeof(RainbowTable));
 	int info;
 	char line [80];
 	
-	table.rows = NULL;
+	pTable -> rows = NULL;
 	FILE *f = fopen("Rainbow.txt", "r");
 	if (f == NULL)
 	{
@@ -152,25 +151,25 @@ RainbowTable* findTable(char* fichier){
 
 	/* Read table information */
 	fscanf(f,"%d",&info);
-	table.tableSize =  info;
+	pTable -> tableSize =  info;
 	fgets(line,79,f);
 	fscanf(f,"%d",&info);
-	table.passwordLength =  info;
+	pTable -> passwordLength =  info;
 	fgets(line,79,f);
 	fscanf(f,"%d",&info);
-	table.redCount =  info;
+	pTable -> redCount =  info;
 	
 	/* Read table datas */
 	while(fgets(line,79,f) != NULL){
 		
 		RainbowRow* row = (RainbowRow *)malloc(sizeof(RainbowRow));
-		unsigned char* myHead = (unsigned char *)malloc(sizeof(unsigned char)*table.passwordLength) ;
-		unsigned char* myTail = (unsigned char *)malloc(sizeof(unsigned char)*table.passwordLength) ;
+		unsigned char* myHead = (unsigned char *)malloc(sizeof(unsigned char)*pTable -> passwordLength) ;
+		unsigned char* myTail = (unsigned char *)malloc(sizeof(unsigned char)*pTable -> passwordLength) ;
 		fscanf(f,"%s %s",myHead, myTail);
 		row->head =  myHead;
 		row->tail = myTail;
-		row->next = table.rows;
-		table.rows = row;
+		row->next = pTable -> rows;
+		pTable -> rows = row;
 	}
 	
 	fclose(f);

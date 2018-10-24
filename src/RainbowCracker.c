@@ -34,21 +34,21 @@ RainbowRow* search(RainbowTable* table, unsigned char* tail) {
 }
 
 RainbowRow* testStep(RainbowTable* table, unsigned char* hash, int step) { 
-    unsigned char* current = malloc(strlen(hash) * sizeof(unsigned char));
-    unsigned char* tobeFreed = malloc(strlen(hash) * sizeof(unsigned char));
-
-    strcpy(current, hash);
+    unsigned char* current = malloc(32 * sizeof(unsigned char));
+    unsigned char* tobeFreed = malloc(32 * sizeof(unsigned char));
+    printf("Step %i ", step);
+    memcpy(current, hash, 32);
 
     for(int i = step; i < nbReduction; i++)
     {
 		tobeFreed = current;
-		current = hasher(current);
-		free(tobeFreed);
-		tobeFreed = current;
 		current = reduction(current, i, table -> passwordLength);
 		free(tobeFreed);
+		tobeFreed = current;
+		current = hasher(current);
+		free(tobeFreed);
     }
-    
+    printf("\n");
     current = reduction(hash, nbReduction, table -> passwordLength);
 
     return search(table, current);
